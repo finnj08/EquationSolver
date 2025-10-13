@@ -8,7 +8,7 @@ import java.util.regex.*;
 
 public class UIFrame extends JFrame {
     Calculator calc = new Calculator();
-    ImageIcon icon = new ImageIcon("src/main/resources/calc.png");
+    ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
     private final int panelDistances  = 50;
     private final Font labelFont = new Font("Arial", Font.BOLD, 15);
     private JComboBox equationType;
@@ -18,8 +18,8 @@ public class UIFrame extends JFrame {
     private JTextField parameterFieldP;
     private JTextField parameterFieldN;
     public String input;
-    private Pattern linearPattern = Pattern.compile("-?[0-9]+x((\\+|-)[0-9]+)?=-?[0-9]+");
-    private Pattern quadraticPattern = Pattern.compile("-?[0-9]+x\\^2(\\+|-)[0-9]+x((\\+|-)[0-9]+)?=(\\+|-)?[0-9]+");
+    private Pattern linearPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+    private Pattern quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x\\^2(\\+|-)[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
     private Pattern binomialFormulaPattern = Pattern.compile("P\\(X(<|>)=?(g|k)\\)(<|<)=?0\\.[0-9]+");
     private Matcher m;
 
