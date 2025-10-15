@@ -38,15 +38,18 @@ public class UIFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        /*selectionPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-        inputPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1)); */
-
         panel.add(initHeadPanel());
-        //panel.add(initSpacePanel());
+        panel.add(Box.createVerticalStrut(20));
+        //panel.add(Box.createVerticalGlue());
         panel.add(initSelectionPanel(equationTypes));
+        panel.add(Box.createVerticalStrut(20));
+        //panel.add(Box.createVerticalGlue());
         panel.add(initInputPanel());
+        panel.add(Box.createVerticalStrut(20));
+        //panel.add(Box.createVerticalGlue());
         panel.add(initOutputPanel());
-        //panel.add(Box.createVerticalStrut(30));
+        panel.add(Box.createVerticalStrut(20));
+        //panel.add(Box.createVerticalGlue());
         panel.add(initBinomialParametersPanel());
         binomialParametersPanel.setVisible(false);
 
@@ -97,7 +100,8 @@ public class UIFrame extends JFrame {
 
         selectionPanel.add(selectEquationType);
         selectionPanel.add(equationType);
-        selectionPanel.setBorder(BorderFactory.createEmptyBorder(panelDistances, 0, panelDistances, 0));
+
+        //selectionPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
         return selectionPanel;
     }
@@ -128,11 +132,22 @@ public class UIFrame extends JFrame {
             }
         });
 
+        JButton inputClear = new JButton("Clear");
+        inputClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inputField.setText("");
+                parameterFieldN.setText("");
+                parameterFieldP.setText("");
+            }
+        });
+
         inputPanel.add(inputInfo);
         inputPanel.add(inputField);
         inputPanel.add(inputSubmit);
+        inputPanel.add(inputClear);
 
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(panelDistances, 0, panelDistances, 0));
+        //inputPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
         return inputPanel;
     }
@@ -147,7 +162,7 @@ public class UIFrame extends JFrame {
 
         outputPanel.add(output);
 
-        outputPanel.setBorder(BorderFactory.createEmptyBorder(panelDistances, 0, panelDistances, 0));
+        //outputPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
         return outputPanel;
     }
@@ -176,7 +191,7 @@ public class UIFrame extends JFrame {
         binomialParametersPanel.add(parameterP);
         binomialParametersPanel.add(parameterFieldP);
 
-        binomialParametersPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        //binomialParametersPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
         return binomialParametersPanel;
     }
@@ -189,7 +204,6 @@ public class UIFrame extends JFrame {
         } else if (equationType.getSelectedItem().equals("Linear Equation")) {
             if(patternMatches(linearPattern, input, m)) {
                 output.setText(String.valueOf("Result:     x = " + calc.linearEquation(input)));
-                inputField.setText("");
             } else {
                 output.setText("Please type in the equation in a regular form.");
             }
@@ -197,10 +211,8 @@ public class UIFrame extends JFrame {
             if(patternMatches(quadraticPattern, input, m)) {
                 if(calc.quadraticEquation(input)[0] == calc.quadraticEquation(input)[1]) {
                     output.setText("This Equation has no solution: L = { }");
-                    inputField.setText("");
                 } else {
                     output.setText(String.valueOf("Result:     x1 = " + calc.quadraticEquation(input)[0] + "     x2 = " + calc.quadraticEquation(input)[1]));
-                    inputField.setText("");
                 }
             } else {
                 output.setText("Please type in the equation in a regular form.");
@@ -212,16 +224,11 @@ public class UIFrame extends JFrame {
 
                 if (patternMatches(binomialFormulaPattern, input, m) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
                     output.setText("Result:     k = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
-                    inputField.setText("");
-                    parameterFieldN.setText("");
-                    parameterFieldP.setText("");
                 } else {
                     output.setText("Please type in the equation in a regular form.");
                 }
             } catch (Exception e) {
                 output.setText("Please type in analogous parameters.");
-                parameterFieldN.setText("");
-                parameterFieldP.setText("");
             }
         }
     }
