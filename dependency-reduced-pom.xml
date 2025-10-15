@@ -4,7 +4,7 @@
   <groupId>com.finn.juenger</groupId>
   <artifactId>EquationSolver</artifactId>
   <name>EquationSolver</name>
-  <version>2.0</version>
+  <version>3.0</version>
   <build>
     <plugins>
       <plugin>
@@ -22,6 +22,50 @@
                   <mainClass>com.finn.juenger.Main</mainClass>
                 </transformer>
               </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>create-installer</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>${java.home}/bin/jpackage</executable>
+              <arguments>
+                <argument>--name</argument>
+                <argument>EquationSolver</argument>
+                <argument>--main-class</argument>
+                <argument>com.finn.juenger.Main</argument>
+                <argument>--input</argument>
+                <argument>target</argument>
+                <argument>--main-jar</argument>
+                <argument>EquationSolver-3.0.jar</argument>
+                <argument>--icon</argument>
+                <argument>src/main/resources/icon.ico</argument>
+                <argument>--dest</argument>
+                <argument>target/installer</argument>
+                <argument>--type</argument>
+                <argument>exe</argument>
+                <argument>--win-menu</argument>
+                <argument>--win-shortcut</argument>
+                <argument>--win-dir-chooser</argument>
+                <argument>--win-menu-group</argument>
+                <argument>EquationSolver</argument>
+                <argument>--app-version</argument>
+                <argument>3.0</argument>
+                <argument>--description</argument>
+                <argument>Löst mathematische Gleichungen einfach und schnell.</argument>
+                <argument>--vendor</argument>
+                <argument>Finn Jünger</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>
