@@ -97,10 +97,10 @@ public class Calculator {
         double d = 0;
         double x = 0;
 
-        Pattern patternComplete = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*[0-9]+(\\.[0-9]+)?\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-        Pattern patternWithoutC = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*[0-9]+(\\.[0-9]+)?\\^x=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-        Pattern patternWithoutA = Pattern.compile("[0-9]+(\\.[0-9]+)?\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-        Pattern patternWithoutAandC = Pattern.compile("[0-9]+(\\.[0-9]+)?\\^x=(\\+|-)[0-9]+(\\.[0-9]+)?");
+        Pattern patternComplete = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*(([0-9]+(\\.[0-9]+)?)|e)\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutC = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*(([0-9]+(\\.[0-9]+)?)|e)\\^x=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutA = Pattern.compile("(([0-9]+(\\.[0-9]+)?)|e)\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutAandC = Pattern.compile("(([0-9]+(\\.[0-9]+)?)|e)\\^x=(\\+|-)[0-9]+(\\.[0-9]+)?");
 
         input = input.replace(" ", "");
 
@@ -116,6 +116,9 @@ public class Calculator {
                 .toArray(String[]::new);
 
         if(mComplete.matches()) {
+            if(split[1].equals("e"))
+                split[1] = String.valueOf(Math.E);
+
             a = Double.parseDouble(split[0]);
             b = Double.parseDouble(split[1]);
             c = Double.parseDouble(split[2]);
@@ -124,12 +127,18 @@ public class Calculator {
             d -= c;
             x = formulaCollection.exponentialSolving(a, b, d);
         } else if (mWithoutC.matches()) {
+            if(split[1].equals("e"))
+                split[1] = String.valueOf(Math.E);
+
             a = Double.parseDouble(split[0]);
             b = Double.parseDouble(split[1]);
             d = Double.parseDouble(split[2]);
 
             x = formulaCollection.exponentialSolving(a, b, d);
         } else if (mWithoutA.matches()) {
+            if(split[0].equals("e"))
+                split[0] = String.valueOf(Math.E);
+
             b = Double.parseDouble(split[0]);
             c = Double.parseDouble(split[1]);
             d = Double.parseDouble(split[2]);
@@ -138,6 +147,9 @@ public class Calculator {
 
             x = formulaCollection.exponentialSolving(a, b, d);
         } else /*if (mWithoutAandC.matches())*/ {
+            if(split[0].equals("e"))
+                split[0] = String.valueOf(Math.E);
+
             b = Double.parseDouble(split[0]);
             d = Double.parseDouble(split[1]);
             a = 1;
