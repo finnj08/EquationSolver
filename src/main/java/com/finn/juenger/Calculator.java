@@ -90,24 +90,32 @@ public class Calculator {
         return results;
     }
 
-    public void exponentialEquation() {
+    public double exponentialEquation(String input) {
         double a = 0;
         double b = 0;
         double c = 0;
         double d = 0;
         double x = 0;
 
-        String input = scan.nextLine();
+        Pattern patternComplete = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*[0-9]+(\\.[0-9]+)?\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutC = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*[0-9]+(\\.[0-9]+)?\\^x=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutA = Pattern.compile("[0-9]+(\\.[0-9]+)?\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutAandC = Pattern.compile("[0-9]+(\\.[0-9]+)?\\^x=(\\+|-)[0-9]+(\\.[0-9]+)?");
+
         input = input.replace(" ", "");
+
+        Matcher mComplete = patternComplete.matcher(input);
+        Matcher mWithoutC = patternWithoutC.matcher(input);
+        Matcher mWithoutA = patternWithoutA.matcher(input);
+        Matcher mWithoutAandC = patternWithoutAandC.matcher(input);
+
         String[] split = input.split("\\*|\\^x|=");
 
         split = Arrays.stream(split)
                 .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);
 
-
-        if(split.length == 4) {
-
+        if(mComplete.matches()) {
             a = Double.parseDouble(split[0]);
             b = Double.parseDouble(split[1]);
             c = Double.parseDouble(split[2]);
@@ -115,16 +123,28 @@ public class Calculator {
 
             d -= c;
             x = formulaCollection.exponentialSolving(a, b, d);
-        }
-        else if (split.length == 3) {
-
+        } else if (mWithoutC.matches()) {
             a = Double.parseDouble(split[0]);
             b = Double.parseDouble(split[1]);
-            c = Double.parseDouble(split[2]);
+            d = Double.parseDouble(split[2]);
 
-            x = formulaCollection.exponentialSolving(a, b, c);
+            x = formulaCollection.exponentialSolving(a, b, d);
+        } else if (mWithoutA.matches()) {
+            b = Double.parseDouble(split[0]);
+            c = Double.parseDouble(split[1]);
+            d = Double.parseDouble(split[2]);
+            a = 1;
+            d-=c;
+
+            x = formulaCollection.exponentialSolving(a, b, d);
+        } else /*if (mWithoutAandC.matches())*/ {
+            b = Double.parseDouble(split[0]);
+            d = Double.parseDouble(split[1]);
+            a = 1;
+
+            x = formulaCollection.exponentialSolving(a, b, d);
         }
-        System.out.println("\nResult:\n\nx=" + x);
+        return x;
     }
 
     private void binomialFormula(int n, double p, String formulaInput) {

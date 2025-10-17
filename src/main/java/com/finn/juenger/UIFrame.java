@@ -20,8 +20,8 @@ public class UIFrame extends JFrame {
     public String input;
     private Pattern linearPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
     private Pattern quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x\\^2(\\+|-)[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+    private Pattern exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+(\\.[0-9]+)?\\*)?[0-9]+(\\.[0-9]+)?\\^x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
     private Pattern binomialFormulaPattern = Pattern.compile("P\\(X(<|>)=?(g|k)\\)(<|<)=?0\\.[0-9]+");
-    private Matcher m;
 
     public UIFrame(String[] equationTypes) {
         this.setTitle("Equation Solver");
@@ -40,16 +40,12 @@ public class UIFrame extends JFrame {
 
         panel.add(initHeadPanel());
         panel.add(Box.createVerticalStrut(20));
-        //panel.add(Box.createVerticalGlue());
         panel.add(initSelectionPanel(equationTypes));
         panel.add(Box.createVerticalStrut(20));
-        //panel.add(Box.createVerticalGlue());
         panel.add(initInputPanel());
         panel.add(Box.createVerticalStrut(20));
-        //panel.add(Box.createVerticalGlue());
         panel.add(initOutputPanel());
         panel.add(Box.createVerticalStrut(20));
-        //panel.add(Box.createVerticalGlue());
         panel.add(initBinomialParametersPanel());
         binomialParametersPanel.setVisible(false);
 
@@ -202,13 +198,13 @@ public class UIFrame extends JFrame {
         if (equationType.getSelectedItem().equals("Select Type")) {
             output.setText("Please select a type of equation in the dropdown list.");
         } else if (equationType.getSelectedItem().equals("Linear Equation")) {
-            if(patternMatches(linearPattern, input, m)) {
+            if(patternMatches(linearPattern, input)) {
                 output.setText(String.valueOf("Result:     x = " + calc.linearEquation(input)));
             } else {
                 output.setText("Please type in the equation in a regular form.");
             }
         } else if (equationType.getSelectedItem().equals("Quadratic Equation")) {
-            if(patternMatches(quadraticPattern, input, m)) {
+            if(patternMatches(quadraticPattern, input)) {
                 if(calc.quadraticEquation(input)[0] == calc.quadraticEquation(input)[1]) {
                     output.setText("This Equation has no solution: L = { }");
                 } else {
@@ -222,7 +218,7 @@ public class UIFrame extends JFrame {
                 int parameterN = Integer.parseInt(parameterFieldN.getText());
                 double parameterP = Double.parseDouble(parameterFieldP.getText());
 
-                if (patternMatches(binomialFormulaPattern, input, m) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
+                if (patternMatches(binomialFormulaPattern, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
                     output.setText("Result:     k = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
                 } else {
                     output.setText("Please type in the equation in a regular form.");
@@ -230,10 +226,21 @@ public class UIFrame extends JFrame {
             } catch (Exception e) {
                 output.setText("Please type in analogous parameters.");
             }
+        } else if (equationType.getSelectedItem().equals("Exponential Equation")) {
+            if (patternMatches(exponentialPattern, input)) {
+                if(Double.isNaN(calc.exponentialEquation(input))) {
+                    output.setText("This Equation has no solution: L = { }");
+                } else {
+                    output.setText("Result:     x = " + calc.exponentialEquation(input));
+                }
+            }
+            else {
+                output.setText("Please type in the equation in a regular form.");
+            }
         }
     }
 
-    private boolean patternMatches(Pattern p, String s, Matcher m) {
+    private boolean patternMatches(Pattern p, String s) {
         return p.matcher(s).matches();
     }
 }
