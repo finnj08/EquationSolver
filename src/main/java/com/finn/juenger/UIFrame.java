@@ -194,6 +194,7 @@ public class UIFrame extends JFrame {
 
     private void calculate() {
         input = inputField.getText();
+        input = input.replace(" ", "");
 
         if (equationType.getSelectedItem().equals("Select Type")) {
             output.setText("Please select a type of equation in the dropdown list.");
