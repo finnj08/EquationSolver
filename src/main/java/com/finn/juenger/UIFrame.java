@@ -18,11 +18,11 @@ public class UIFrame extends JFrame {
     private JTextField parameterFieldP;
     private JTextField parameterFieldN;
     public String input;
-    private Pattern linearPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-    private Pattern quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?x\\^2(\\+|-)[0-9]+(\\.[0-9]+)?x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-    private Pattern exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+(\\.[0-9]+)?\\*)?(([0-9]+(\\.[0-9]+)?)|e)\\^x((\\+|-)[0-9]+(\\.[0-9]+)?)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-    private Pattern binomialFormulaPattern = Pattern.compile("P\\(X(<|>)=?(g|k)\\)(<|<)=?0\\.[0-9]+");
-
+    private Pattern linearPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
+    private Pattern quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x\\^2(\\+|-)[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
+    private Pattern exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*)?(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
+    private Pattern binomialFormulaPatternWithK = Pattern.compile("P\\(X(<|>)=?k\\)(<|<)=?0(\\.|,)[0-9]+");
+    private Pattern binomialFormulaPatternWithG = Pattern.compile("P\\(X(<|>)=?g\\)(<|<)=?0(\\.|,)[0-9]+");
     public UIFrame(String[] equationTypes) {
         this.setTitle("Equation Solver");
         this.setBounds(300, 100, 800, 500);
@@ -177,10 +177,22 @@ public class UIFrame extends JFrame {
         parameterFieldP = new JTextField();
         parameterFieldP.setPreferredSize(new Dimension(50,25));
         parameterFieldP.putClientProperty("JComponent.roundRect", true);
+        parameterFieldP.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculate();
+            }
+        });
 
         parameterFieldN = new JTextField();
         parameterFieldN.setPreferredSize(new Dimension(50,25));
         parameterFieldN.putClientProperty("JComponent.roundRect", true);
+        parameterFieldN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculate();
+            }
+        });
 
         binomialParametersPanel.add(parameterN);
         binomialParametersPanel.add(parameterFieldN);
@@ -195,6 +207,7 @@ public class UIFrame extends JFrame {
     private void calculate() {
         input = inputField.getText();
         input = input.replace(" ", "");
+        input = input.replace(",", ".");
 
         if (equationType.getSelectedItem().equals("Select Type")) {
             output.setText("Please select a type of equation in the dropdown list.");
@@ -217,10 +230,14 @@ public class UIFrame extends JFrame {
         } else if (equationType.getSelectedItem().equals("Binomial Problem Solving")) {
             try {
                 int parameterN = Integer.parseInt(parameterFieldN.getText());
-                double parameterP = Double.parseDouble(parameterFieldP.getText());
+                String parameterPstring = parameterFieldP.getText();
+                parameterPstring = parameterPstring.replace(",",".");
+                double parameterP = Double.parseDouble(parameterPstring);
 
-                if (patternMatches(binomialFormulaPattern, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
+                if (patternMatches(binomialFormulaPatternWithK, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
                     output.setText("Result:     k = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
+                } else if(patternMatches(binomialFormulaPatternWithG, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
+                    output.setText("Result:     g = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
                 } else {
                     output.setText("Please type in the equation in a regular form.");
                 }

@@ -16,7 +16,6 @@ public class Calculator {
 
     //Constructor
     public Calculator() {
-        scan = new Scanner(System.in);
         formulaCollection = new Formula();
     }
 
@@ -97,10 +96,10 @@ public class Calculator {
         double d = 0;
         double x = 0;
 
-        Pattern patternComplete = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*(([0-9]+(\\.[0-9]+)?)|e)\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-        Pattern patternWithoutC = Pattern.compile("(\\+|-)?[0-9]+(\\.[0-9]+)?\\*(([0-9]+(\\.[0-9]+)?)|e)\\^x=(\\+|-)?[0-9]+(\\.[0-9]+)?");
+        Pattern patternComplete = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x(\\+|-)[0-9]+((\\.|,)[0-9]+)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
+        Pattern patternWithoutC = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
         Pattern patternWithoutA = Pattern.compile("(([0-9]+(\\.[0-9]+)?)|e)\\^x(\\+|-)[0-9]+(\\.[0-9]+)?=(\\+|-)?[0-9]+(\\.[0-9]+)?");
-        Pattern patternWithoutAandC = Pattern.compile("(([0-9]+(\\.[0-9]+)?)|e)\\^x=(\\+|-)[0-9]+(\\.[0-9]+)?");
+        Pattern patternWithoutAandC = Pattern.compile("(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x=(\\+|-)[0-9]+((\\.|,)[0-9]+)?");
 
         input = input.replace(" ", "");
 
@@ -174,7 +173,7 @@ public class Calculator {
 
         // Here comes the automatic transformation into <=
 
-        Pattern pattern = Pattern.compile("(<=|>=|<|>)([0-9]+(\\.[0-9]+)?)");
+        Pattern pattern = Pattern.compile("(<=|>=|<|>)([0-9]+((\\.|,)[0-9]+)?)");
         Matcher m = pattern.matcher(split1[1]);
         if(m.matches()) {
             this.unequationType = m.group(1);
