@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 import java.util.regex.*;
 
 public class UIFrame extends JFrame {
+
     Calculator calc = new Calculator();
+    StateMachine sm = new StateMachine();
     ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
-    private final int panelDistances  = 50;
-    private final Font labelFont = new Font("Arial", Font.BOLD, 15);
+    private int panelDistances;
+    private Font labelFont;
     private JComboBox equationType;
     private JTextField inputField;
     private JLabel output;
@@ -18,17 +20,16 @@ public class UIFrame extends JFrame {
     private JTextField parameterFieldP;
     private JTextField parameterFieldN;
     public String input;
-    private Pattern linearPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
-    private Pattern quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x\\^2(\\+|-)[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
-    private Pattern exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*)?(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
-    private Pattern binomialFormulaPatternWithK = Pattern.compile("P\\(X(<|>)=?k\\)(<|<)=?0(\\.|,)[0-9]+");
-    private Pattern binomialFormulaPatternWithG = Pattern.compile("P\\(X(<|>)=?g\\)(<|<)=?0(\\.|,)[0-9]+");
+
     public UIFrame(String[] equationTypes) {
         this.setTitle("Equation Solver");
         this.setBounds(300, 100, 800, 500);
         this.setIconImage(icon.getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(Color.WHITE);
+
+        this.labelFont = new Font("Arial", Font.BOLD, 15);
+        this.panelDistances = 50;
 
         initComponents(equationTypes);
         this.setVisible(true);
@@ -212,13 +213,13 @@ public class UIFrame extends JFrame {
         if (equationType.getSelectedItem().equals("Select Type")) {
             output.setText("Please select a type of equation in the dropdown list.");
         } else if (equationType.getSelectedItem().equals("Linear Equation")) {
-            if(patternMatches(linearPattern, input)) {
+            if(sm.linearPatternMatches(input)) {
                 output.setText(String.valueOf("Result:     x = " + calc.linearEquation(input)));
             } else {
                 output.setText("Please type in the equation in a regular form.");
             }
         } else if (equationType.getSelectedItem().equals("Quadratic Equation")) {
-            if(patternMatches(quadraticPattern, input)) {
+            if(sm.quadraticPatternMatches(input)) {
                 if(calc.quadraticEquation(input)[0] == calc.quadraticEquation(input)[1]) {
                     output.setText("This Equation has no solution: L = { }");
                 } else {
@@ -234,9 +235,9 @@ public class UIFrame extends JFrame {
                 parameterPstring = parameterPstring.replace(",",".");
                 double parameterP = Double.parseDouble(parameterPstring);
 
-                if (patternMatches(binomialFormulaPatternWithK, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
+                if (sm.binomialFormulaPatternWithKMatches(input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
                     output.setText("Result:     k = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
-                } else if(patternMatches(binomialFormulaPatternWithG, input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
+                } else if(sm.binomialFormulaPatternWithGMatches(input) && parameterN >= 1 && parameterP < 1 && parameterP > 0) {
                     output.setText("Result:     g = " + String.valueOf(calc.binomialProblemSolving(parameterN, parameterP, input)));
                 } else {
                     output.setText("Please type in the equation in a regular form.");
@@ -245,7 +246,7 @@ public class UIFrame extends JFrame {
                 output.setText("Please type in analogous parameters.");
             }
         } else if (equationType.getSelectedItem().equals("Exponential Equation")) {
-            if (patternMatches(exponentialPattern, input)) {
+            if (sm.ExponentialPatternMatches(input)) {
                 if(Double.isNaN(calc.exponentialEquation(input))) {
                     output.setText("This Equation has no solution: L = { }");
                 } else {
@@ -256,9 +257,5 @@ public class UIFrame extends JFrame {
                 output.setText("Please type in the equation in a regular form.");
             }
         }
-    }
-
-    private boolean patternMatches(Pattern p, String s) {
-        return p.matcher(s).matches();
     }
 }
