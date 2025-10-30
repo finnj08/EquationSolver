@@ -163,29 +163,29 @@ public class Calculator {
 
         formulaInput = formulaInput.replace(" ", "");
         formulaInput = formulaInput.substring(1);
-        String[] split1 = formulaInput.split("\\(|\\)");
+        String[] split = formulaInput.split("\\(|\\)");
 
-        split1 = Arrays.stream(split1)
+        split = Arrays.stream(split)
                 .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);
 
-        split1[0] = split1[0].substring(1,split1[0].length() - 1); // Inspiration for extended feature: Automatically knowing which parameter to search for (not only k)
+        split[0] = split[0].substring(1, split[0].length() - 1); // Inspiration for extended feature: Automatically knowing which parameter to search for (not only k)
 
         // Here comes the automatic transformation into <=
 
         Pattern pattern = Pattern.compile("(<=|>=|<|>)([0-9]+((\\.|,)[0-9]+)?)");
-        Matcher m = pattern.matcher(split1[1]);
+        Matcher m = pattern.matcher(split[1]);
         if(m.matches()) {
             this.unequationType = m.group(1);
             this.x = Double.parseDouble(m.group(2));
         } else {
-            throw new IllegalArgumentException("Ungültiger String: " + split1[1]);
+            throw new IllegalArgumentException("Ungültiger String: " + split[1]);
         }
 
-        if(split1[0].equals("<")) {
+        if(split[0].equals("<")) {
             marker = true;
         }
-        if(split1[0].equals(">")) {
+        if(split[0].equals(">")) {
             if(this.unequationType.equals("<=") || this.unequationType.equals("<"))
                 this.unequationType = ">";
             else
@@ -193,7 +193,7 @@ public class Calculator {
             x-=1;
             x*=-1;
         }
-        if(split1[0].equals(">=")) {
+        if(split[0].equals(">=")) {
             if(this.unequationType.equals("<=") || this.unequationType.equals("<"))
                 this.unequationType = ">";
             else
