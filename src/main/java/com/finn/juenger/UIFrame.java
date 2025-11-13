@@ -1,5 +1,7 @@
 package com.finn.juenger;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,9 +10,9 @@ import java.util.regex.*;
 
 public class UIFrame extends JFrame {
 
-    Calculator calc = new Calculator();
-    StateMachine sm = new StateMachine();
-    ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
+    private Calculator calc;
+    private StateMachine sm;
+    private ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
     private int panelDistances;
     private Font labelFont;
     private JComboBox equationType;
@@ -19,9 +21,15 @@ public class UIFrame extends JFrame {
     private JPanel binomialParametersPanel;
     private JTextField parameterFieldP;
     private JTextField parameterFieldN;
+    private JLabel parameterP;
+    private JLabel parameterN;
     public String input;
+    private VectorFrame vectorFrame;
 
     public UIFrame(String[] equationTypes) {
+        calc = new Calculator();
+        sm = new StateMachine();
+
         this.setTitle("Equation Solver");
         this.setBounds(300, 100, 800, 500);
         this.setIconImage(icon.getImage());
@@ -29,7 +37,7 @@ public class UIFrame extends JFrame {
         this.getContentPane().setBackground(Color.WHITE);
 
         this.labelFont = new Font("Arial", Font.BOLD, 15);
-        this.panelDistances = 50;
+        this.panelDistances = 10;
 
         initComponents(equationTypes);
         this.setVisible(true);
@@ -40,15 +48,18 @@ public class UIFrame extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         panel.add(initHeadPanel());
-        panel.add(Box.createVerticalStrut(20));
+        panel.add(Box.createVerticalStrut(panelDistances + 10));
         panel.add(initSelectionPanel(equationTypes));
-        panel.add(Box.createVerticalStrut(20));
+        panel.add(Box.createVerticalStrut(panelDistances));
         panel.add(initInputPanel());
-        panel.add(Box.createVerticalStrut(20));
+        panel.add(Box.createVerticalStrut(panelDistances));
         panel.add(initOutputPanel());
-        panel.add(Box.createVerticalStrut(20));
+        panel.add(Box.createVerticalStrut(panelDistances));
         panel.add(initBinomialParametersPanel());
-        binomialParametersPanel.setVisible(false);
+        panel.add(Box.createVerticalStrut(panelDistances));
+        panel.add(initVectorPanel());
+        binomialParametersPanel.setVisible(true);
+        setBinomialComponentsVisible(false);
 
         this.add(panel);
     }
@@ -69,15 +80,9 @@ public class UIFrame extends JFrame {
         return headPanel;
     }
 
-    private JPanel initSpacePanel() {
-        JPanel spacePanel = new JPanel();
-        spacePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 15));
-        return spacePanel;
-    }
-
     private JPanel initSelectionPanel(String[] equationTypes) {
         JPanel selectionPanel = new JPanel();
-        selectionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        selectionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
         selectionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         JLabel selectEquationType = new JLabel("Please select your prefered type of the equation you want to solve:");
@@ -88,7 +93,9 @@ public class UIFrame extends JFrame {
         equationType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                binomialParametersPanel.setVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
+                //binomialParametersPanel.setVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
+
+                setBinomialComponentsVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
 
                 equationType.getParent().getParent().revalidate();
                 equationType.getParent().getParent().repaint();
@@ -105,7 +112,7 @@ public class UIFrame extends JFrame {
 
     private JPanel initInputPanel() {
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
         inputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         JLabel inputInfo = new JLabel("Please type in your equation here:");
@@ -151,7 +158,7 @@ public class UIFrame extends JFrame {
 
     private JPanel initOutputPanel() {
         JPanel outputPanel = new JPanel();
-        outputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        outputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 17, 0));
         outputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         output = new JLabel("");
@@ -166,13 +173,13 @@ public class UIFrame extends JFrame {
 
     private JPanel initBinomialParametersPanel() {
         binomialParametersPanel = new JPanel();
-        binomialParametersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        binomialParametersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
         binomialParametersPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
-        JLabel parameterN = new JLabel("n = ");
+        parameterN = new JLabel("n = ");
         parameterN.setFont(labelFont);
 
-        JLabel parameterP = new JLabel("p = ");
+        parameterP = new JLabel("p = ");
         parameterP.setFont(labelFont);
 
         parameterFieldP = new JTextField();
@@ -203,6 +210,35 @@ public class UIFrame extends JFrame {
         //binomialParametersPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 
         return binomialParametersPanel;
+    }
+
+    private JPanel initVectorPanel() {
+        JPanel vectorPanel = new JPanel();
+        vectorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+        vectorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JButton vectorFrameButton = new JButton("Vector Calculations");
+        vectorFrameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FlatLightLaf.setup();
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    vectorFrame = new VectorFrame();
+                });
+            }
+        });
+
+        vectorPanel.add(vectorFrameButton);
+
+        return vectorPanel;
+    }
+
+    private void setBinomialComponentsVisible(boolean visible) {
+        parameterN.setVisible(visible);
+        parameterFieldN.setVisible(visible);
+        parameterP.setVisible(visible);
+        parameterFieldP.setVisible(visible);
+
     }
 
     private void calculate() {

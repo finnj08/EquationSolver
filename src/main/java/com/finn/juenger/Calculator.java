@@ -216,4 +216,26 @@ public class Calculator {
         marker = false;
         return k;
     }
+
+    public double distanceBetweenVectorsSolving(String inputA, String inputB) {
+        double a1;
+        double a2;
+        double a3;
+        double b1;
+        double b2;
+        double b3;
+
+        String[] splitA = inputA.split("(\\()|(\\))|/");
+        String[] splitB = inputB.split("(\\()|(\\))|/");
+
+        a1 = Double.parseDouble(splitA[1]);
+        a2 = Double.parseDouble(splitA[2]);
+        a3 = Double.parseDouble(splitA[3]);
+
+        b1 = Double.parseDouble(splitB[1]);
+        b2 = Double.parseDouble(splitB[2]);
+        b3 = Double.parseDouble(splitB[3]);
+
+        return formulaCollection.distanceBetween2Vectors(a1, a2, a3, b1, b2, b3);
+    }
 }

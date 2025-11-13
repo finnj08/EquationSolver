@@ -10,6 +10,7 @@ public class StateMachine {
     private Pattern exponentialPattern;
     private Pattern binomialFormulaPatternWithK;
     private Pattern binomialFormulaPatternWithG;
+    private Pattern vectorPointPattern;
 
     //Constructor
     public StateMachine() {
@@ -18,6 +19,7 @@ public class StateMachine {
         this.exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*)?(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
         this.binomialFormulaPatternWithK = Pattern.compile("P\\(X(<|>)=?k\\)(<|<)=?0(\\.|,)[0-9]+");
         this.binomialFormulaPatternWithG = Pattern.compile("P\\(X(<|>)=?g\\)(<|<)=?0(\\.|,)[0-9]+");
+        this.vectorPointPattern = Pattern.compile("[A-Z][0-9]*\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
     }
 
     //Methods matcher Methods
@@ -39,5 +41,9 @@ public class StateMachine {
 
     public boolean binomialFormulaPatternWithGMatches(String input) {
         return binomialFormulaPatternWithG.matcher(input).matches();
+    }
+
+    public boolean vectorPointPatternMatches(String input) {
+        return vectorPointPattern.matcher(input).matches();
     }
 }

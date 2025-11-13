@@ -76,4 +76,8 @@ public class Formula {
             return 0;
         }
     }
+
+    public double distanceBetween2Vectors(double a1, double a2, double a3, double b1, double b2, double b3) {
+        return Math.sqrt((double) (Math.pow(b1-a1, 2) + Math.pow(b2-a2, 2) + Math.pow(b3-a3, 2)));
+    }
 }
