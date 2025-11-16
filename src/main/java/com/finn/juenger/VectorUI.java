@@ -5,11 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class VectorFrame extends JFrame{
+public class VectorUI extends JPanel{
 
     private Calculator calc;
     private StateMachine sm;
-    private ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
     private ImageIcon infoIcon = new ImageIcon(getClass().getResource("/info3.png"));
     private ImageIcon scaledIcon;
     private Font labelFont;
@@ -17,8 +16,10 @@ public class VectorFrame extends JFrame{
     private JLabel vectorDistanceOutputLabel;
     private JTextField pointAField;
     private JTextField pointBField;
+    public JButton equationsButton;
+    private JScrollPane scrollPane;
 
-    public VectorFrame() {
+    public VectorUI() {
         this.calc = new Calculator();
         this.sm = new StateMachine();
         this.labelFont = new Font("Arial", Font.BOLD, 15);
@@ -28,29 +29,22 @@ public class VectorFrame extends JFrame{
         Image scaledImage = image.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         this.scaledIcon = new ImageIcon(scaledImage);
 
-        this.setTitle("Vector Calculations");
-        this.setBounds(400, 200, 800, 500);
-        this.setIconImage(icon.getImage());
-        this.getContentPane().setBackground(Color.WHITE);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         initComponents();
-        this.setVisible(true);
     }
 
     public void initComponents() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        JScrollPane scrollPane = new JScrollPane(initComponentsPanel());
+        scrollPane = new JScrollPane(initComponentsPanel());
         scrollPane.setBorder(null);
 
         //Methods for init the components
-        panel.add(initHeadPanel());
-        panel.add(Box.createVerticalStrut(panelDistance + 10));
-        panel.add(scrollPane);
-        //panel.add(initComponentsPanel());
+        this.add(initHeadPanel());
+        this.add(Box.createVerticalStrut(panelDistance + 10));
+        this.add(scrollPane);
+        this.add(Box.createVerticalStrut(panelDistance));
+        this.add(initEquationsPanel());
 
-        this.add(panel);
     }
 
     public JPanel initHeadPanel() {
@@ -177,6 +171,17 @@ public class VectorFrame extends JFrame{
         vectorDistanceOutputPanel.add(vectorDistanceOutputLabel);
 
         return vectorDistanceOutputPanel;
+    }
+
+    public JPanel initEquationsPanel() {
+        JPanel equationsPanel = new JPanel();
+        equationsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+
+        equationsButton = new JButton("Equation Solver");
+
+        equationsPanel.add(equationsButton);
+
+        return equationsPanel;
     }
 
     public void calculateVectorDistance() {

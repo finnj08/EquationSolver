@@ -1,18 +1,14 @@
 package com.finn.juenger;
 
-import com.formdev.flatlaf.FlatLightLaf;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.*;
 
-public class UIFrame extends JFrame {
+public class EquationUI extends JPanel {
 
     private Calculator calc;
     private StateMachine sm;
-    private ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
     private int panelDistances;
     private Font labelFont;
     private JComboBox equationType;
@@ -24,44 +20,36 @@ public class UIFrame extends JFrame {
     private JLabel parameterP;
     private JLabel parameterN;
     public String input;
-    private VectorFrame vectorFrame;
+    public JButton vectorFrameButton;
+    String[] equationTypes = {"Select Type", "Linear Equation", "Quadratic Equation", "Exponential Equation", "Binomial Problem Solving"};
 
-    public UIFrame(String[] equationTypes) {
+    public EquationUI() {
         calc = new Calculator();
         sm = new StateMachine();
 
-        this.setTitle("Equation Solver");
-        this.setBounds(300, 100, 800, 500);
-        this.setIconImage(icon.getImage());
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.getContentPane().setBackground(Color.WHITE);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.labelFont = new Font("Arial", Font.BOLD, 15);
         this.panelDistances = 10;
 
         initComponents(equationTypes);
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 
     private void initComponents(String[] equationTypes) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(initHeadPanel());
-        panel.add(Box.createVerticalStrut(panelDistances + 10));
-        panel.add(initSelectionPanel(equationTypes));
-        panel.add(Box.createVerticalStrut(panelDistances));
-        panel.add(initInputPanel());
-        panel.add(Box.createVerticalStrut(panelDistances));
-        panel.add(initOutputPanel());
-        panel.add(Box.createVerticalStrut(panelDistances));
-        panel.add(initBinomialParametersPanel());
-        panel.add(Box.createVerticalStrut(panelDistances));
-        panel.add(initVectorPanel());
+        this.add(initHeadPanel());
+        this.add(Box.createVerticalStrut(panelDistances + 10));
+        this.add(initSelectionPanel(equationTypes));
+        this.add(Box.createVerticalStrut(panelDistances));
+        this.add(initInputPanel());
+        this.add(Box.createVerticalStrut(panelDistances));
+        this.add(initOutputPanel());
+        this.add(Box.createVerticalStrut(panelDistances));
+        this.add(initBinomialParametersPanel());
+        this.add(Box.createVerticalStrut(panelDistances));
+        this.add(initVectorPanel());
         binomialParametersPanel.setVisible(true);
         setBinomialComponentsVisible(false);
-
-        this.add(panel);
     }
 
     private JPanel initHeadPanel() {
@@ -93,8 +81,6 @@ public class UIFrame extends JFrame {
         equationType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //binomialParametersPanel.setVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
-
                 setBinomialComponentsVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
 
                 equationType.getParent().getParent().revalidate();
@@ -217,16 +203,7 @@ public class UIFrame extends JFrame {
         vectorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
         vectorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
-        JButton vectorFrameButton = new JButton("Vector Calculations");
-        vectorFrameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FlatLightLaf.setup();
-                javax.swing.SwingUtilities.invokeLater(() -> {
-                    vectorFrame = new VectorFrame();
-                });
-            }
-        });
+        vectorFrameButton = new JButton("Vector Calculations");
 
         vectorPanel.add(vectorFrameButton);
 
