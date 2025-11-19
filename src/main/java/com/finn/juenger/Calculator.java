@@ -238,4 +238,18 @@ public class Calculator {
 
         return formulaCollection.distanceBetween2Vectors(a1, a2, a3, b1, b2, b3);
     }
+
+    public double vectorLengthSolving(String input) {
+        double a1;
+        double a2;
+        double a3;
+
+        String[] split = input.split("(\\()|(\\))|/");
+
+        a1 = Double.parseDouble(split[1]);
+        a2 = Double.parseDouble(split[2]);
+        a3 = Double.parseDouble(split[3]);
+
+        return formulaCollection.vectorLength(a1, a2, a3);
+    }
 }

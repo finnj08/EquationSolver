@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EquationUI extends JPanel {
+public class EquationUI extends JPanel implements ActionListener {
 
     private Calculator calc;
     private StateMachine sm;
@@ -21,7 +21,9 @@ public class EquationUI extends JPanel {
     private JLabel parameterN;
     public String input;
     public JButton vectorFrameButton;
-    String[] equationTypes = {"Select Type", "Linear Equation", "Quadratic Equation", "Exponential Equation", "Binomial Problem Solving"};
+    private String[] equationTypes = {"Select Type", "Linear Equation", "Quadratic Equation", "Exponential Equation", "Binomial Problem Solving"};
+    private JButton inputSubmit;
+    private JButton inputClear;
 
     public EquationUI() {
         calc = new Calculator();
@@ -78,15 +80,7 @@ public class EquationUI extends JPanel {
 
         equationType = new JComboBox(equationTypes);
         equationType.setMaximumSize(new Dimension(200, 50));
-        equationType.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setBinomialComponentsVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
-
-                equationType.getParent().getParent().revalidate();
-                equationType.getParent().getParent().repaint();
-            }
-        });
+        equationType.addActionListener(this);
 
         selectionPanel.add(selectEquationType);
         selectionPanel.add(equationType);
@@ -107,30 +101,13 @@ public class EquationUI extends JPanel {
         inputField = new JTextField();
         inputField.setPreferredSize(new Dimension(200,25));
         inputField.putClientProperty("JComponent.roundRect", true);
-        inputField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculate();
-            }
-        });
+        inputField.addActionListener(this);
 
-        JButton inputSubmit = new JButton("Submit");
-        inputSubmit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculate();
-            }
-        });
+        inputSubmit = new JButton("Submit");
+        inputSubmit.addActionListener(this);
 
-        JButton inputClear = new JButton("Clear");
-        inputClear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                inputField.setText("");
-                parameterFieldN.setText("");
-                parameterFieldP.setText("");
-            }
-        });
+        inputClear = new JButton("Clear");
+        inputClear.addActionListener(this);
 
         inputPanel.add(inputInfo);
         inputPanel.add(inputField);
@@ -161,6 +138,7 @@ public class EquationUI extends JPanel {
         binomialParametersPanel = new JPanel();
         binomialParametersPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
         binomialParametersPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        binomialParametersPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 80));
 
         parameterN = new JLabel("n = ");
         parameterN.setFont(labelFont);
@@ -171,22 +149,12 @@ public class EquationUI extends JPanel {
         parameterFieldP = new JTextField();
         parameterFieldP.setPreferredSize(new Dimension(50,25));
         parameterFieldP.putClientProperty("JComponent.roundRect", true);
-        parameterFieldP.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculate();
-            }
-        });
+        parameterFieldP.addActionListener(this);
 
         parameterFieldN = new JTextField();
         parameterFieldN.setPreferredSize(new Dimension(50,25));
         parameterFieldN.putClientProperty("JComponent.roundRect", true);
-        parameterFieldN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calculate();
-            }
-        });
+        parameterFieldN.addActionListener(this);
 
         binomialParametersPanel.add(parameterN);
         binomialParametersPanel.add(parameterFieldN);
@@ -269,6 +237,21 @@ public class EquationUI extends JPanel {
             else {
                 output.setText("Please type in the equation in a regular form.");
             }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == inputSubmit || e.getSource() == inputField || e.getSource() == parameterFieldN || e.getSource() == parameterFieldP) {
+            calculate();
+        } else if (e.getSource() == inputClear) {
+            inputField.setText("");
+            parameterFieldN.setText("");
+            parameterFieldP.setText("");
+        } else if (e.getSource() == equationType) {
+            setBinomialComponentsVisible(equationType.getSelectedItem() == "Binomial Problem Solving");
+            equationType.getParent().getParent().revalidate();
+            equationType.getParent().getParent().repaint();
         }
     }
 }

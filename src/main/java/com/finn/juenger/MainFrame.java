@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
 
     private ImageIcon icon = new ImageIcon(getClass().getResource("/calc.png"));
     private VectorUI vectorUI;
@@ -29,25 +29,24 @@ public class MainFrame extends JFrame {
     }
 
     public void initComponents() {
-        CardLayout cardLayout = new CardLayout();
+        cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
         mainPanel.add(equationUI, "Page 1");
         mainPanel.add(vectorUI, "Page 2");
 
-        vectorUI.equationsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Page 1");
-            }
-        });
-        equationUI.vectorFrameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Page 2");
-            }
-        });
+        vectorUI.equationsButton.addActionListener(this);
+        equationUI.vectorFrameButton.addActionListener(this);
 
         this.add(mainPanel);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == vectorUI.equationsButton) {
+            cardLayout.show(mainPanel, "Page 1");
+        } else if (e.getSource() == equationUI.vectorFrameButton) {
+            cardLayout.show(mainPanel, "Page 2");
+        }
     }
 }

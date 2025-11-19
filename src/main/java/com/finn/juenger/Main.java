@@ -5,7 +5,7 @@ public class Main {
     static Calculator calc = new Calculator();
     static MainFrame frame;
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         FlatLightLaf.setup();
         javax.swing.SwingUtilities.invokeLater(() -> {
             frame = new MainFrame();
