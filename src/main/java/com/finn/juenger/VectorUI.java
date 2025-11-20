@@ -24,6 +24,14 @@ public class VectorUI extends JPanel implements ActionListener{
     private JButton submit;
     private JButton clear1;
     private JButton clear2;
+    private JComboBox planeType1;
+    private JComboBox planeType2;
+    private String[] planeTypes = {"Select Type", "Parametric Form", "Normal Form", "Cartesian Form"};
+    private JTextField planeEquationField;
+    private JLabel planeConversionOutputLabel;
+    private JButton planeConversionButton;
+    private JButton clear3;
+
 
     public VectorUI() {
         this.calc = new Calculator();
@@ -43,6 +51,7 @@ public class VectorUI extends JPanel implements ActionListener{
     public void initComponents() {
         scrollPane = new JScrollPane(initComponentsPanel());
         scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
         //Methods for init the components
         this.add(initHeadPanel());
@@ -77,6 +86,8 @@ public class VectorUI extends JPanel implements ActionListener{
         componentsPanel.add(initVectorDistancePanel());
         componentsPanel.add(Box.createVerticalStrut(panelDistance));
         componentsPanel.add(initVectorLengthPanel());
+        componentsPanel.add(Box.createVerticalStrut(panelDistance));
+        componentsPanel.add(initPlaneConversionPanel());
 
         return componentsPanel;
     }
@@ -274,6 +285,120 @@ public class VectorUI extends JPanel implements ActionListener{
         } else {
             vectorLengthOutputLabel.setText("Please type in your vectors like this: v = (a1/a2/a3)");
         }
+    }
+
+    public JPanel initPlaneConversionPanel() {
+        JPanel planeConversionPanel = new JPanel();
+        planeConversionPanel.setLayout(new BoxLayout(planeConversionPanel, BoxLayout.Y_AXIS));
+
+        //Methods for initialing the components
+        planeConversionPanel.add(initPlaneConversionInfoPanel());
+        planeConversionPanel.add(Box.createVerticalStrut(panelDistance));
+        planeConversionPanel.add(initPlaneConversionInputPanel());
+        planeConversionPanel.add(Box.createVerticalStrut(panelDistance));
+        planeConversionPanel.add(initPlaneConversionOutputPanel());
+
+        return planeConversionPanel;
+    }
+
+    public JPanel initPlaneConversionInfoPanel() {
+        JPanel planeConversionInfoPanel = new JPanel();
+        planeConversionInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+        planeConversionInfoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JLabel planeConversionInfoLabel = new JLabel("Please select your preferred planes you want to convert and type in your plane: ");
+        planeConversionInfoLabel.setFont(labelFont);
+
+        planeConversionInfoPanel.add(planeConversionInfoLabel);
+
+        return planeConversionInfoPanel;
+    }
+
+    public JPanel initPlaneConversionInputPanel() {
+        JPanel planeConversionInputPanel = new JPanel();
+        planeConversionInputPanel.setLayout(new BoxLayout(planeConversionInputPanel, BoxLayout.Y_AXIS));
+        planeConversionInputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JPanel selection1 = new JPanel();
+        selection1.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+        selection1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JPanel input = new JPanel();
+        input.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+        input.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JPanel selection2 = new JPanel();
+        selection2.setLayout(new FlowLayout(FlowLayout.LEFT, 17, 0));
+        selection2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+
+        JLabel planeType1Label = new JLabel("Plane Type: ");
+        planeType1Label.setFont(labelFont);
+
+        planeType1 = new JComboBox(planeTypes);
+        planeType1.setMaximumSize(new Dimension(200, 50));
+
+        JLabel infoIcon = new JLabel();
+        infoIcon.setIcon(scaledIcon);
+        if (planeType1.getSelectedItem().equals(planeTypes[1])) {
+            infoIcon.setToolTipText("E: x = (a1/a2/a3) + t * (b1/b2/b3) + s * (c1/c2/c3");
+        } else if (planeType1.getSelectedItem().equals(planeTypes[2])) {
+            infoIcon.setToolTipText("E: x = [(a1/a2/a3) - (a1/a2/a3)] * n(n1/n2/n3) = 0");
+        } else if (planeType1.getSelectedItem().equals(planeTypes[3])) {
+            infoIcon.setToolTipText("E: ax1 + bx2 + bx3 = c");
+        } else if (planeType1.getSelectedItem().equals(planeTypes[0])) {
+            infoIcon.setToolTipText("Please select a type of plane in the dropdown list.");
+        }
+
+        JLabel planeEquationLabel = new JLabel("Type in your plane equation:");
+        planeEquationLabel.setFont(labelFont);
+
+        planeEquationField = new JTextField();
+        planeEquationField.setPreferredSize(new Dimension(150,25));
+        planeEquationField.putClientProperty("JComponent.roundRect", true);
+        planeEquationField.addActionListener(this);
+
+        planeConversionButton = new JButton("Submit");
+        planeConversionButton.addActionListener(this);
+
+        clear3 = new JButton("Clear");
+        clear3.addActionListener(this);
+
+        JLabel planeType2Label = new JLabel("convert into:");
+        planeType2Label.setFont(labelFont);
+
+        planeType2 = new JComboBox(planeTypes);
+        planeType2.setMaximumSize(new Dimension(200, 50));
+
+        selection1.add(planeType1Label);
+        selection1.add(planeType1);
+        selection1.add(infoIcon);
+        input.add(planeEquationLabel);
+        input.add(planeEquationField);
+        input.add(planeConversionButton);
+        input.add(clear3);
+        selection2.add(planeType2Label);
+        selection2.add(planeType2);
+
+        planeConversionInputPanel.add(selection1);
+        planeConversionInputPanel.add(Box.createVerticalStrut(panelDistance));
+        planeConversionInputPanel.add(input);
+        planeConversionInputPanel.add(Box.createVerticalStrut(panelDistance));
+        planeConversionInputPanel.add(selection2);
+
+
+        return planeConversionInputPanel;
+    }
+
+    public JPanel initPlaneConversionOutputPanel() {
+        JPanel planeConversionOutputPanel = new JPanel();
+        planeConversionOutputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 17, 0));
+        planeConversionOutputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        planeConversionOutputPanel.setPreferredSize(new Dimension(0, 80));
+
+        planeConversionOutputLabel = new JLabel();
+        planeConversionOutputLabel.setFont(labelFont);
+
+        return planeConversionOutputPanel;
     }
 
     @Override

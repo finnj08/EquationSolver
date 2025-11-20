@@ -4,7 +4,7 @@
   <groupId>com.finn.juenger</groupId>
   <artifactId>EquationSolver</artifactId>
   <name>EquationSolver</name>
-  <version>4.3</version>
+  <version>4.4</version>
   <build>
     <plugins>
       <plugin>
@@ -47,7 +47,7 @@
                 <argument>--input</argument>
                 <argument>target</argument>
                 <argument>--main-jar</argument>
-                <argument>EquationSolver-4.3.jar</argument>
+                <argument>EquationSolver-4.4.jar</argument>
                 <argument>--icon</argument>
                 <argument>src/main/resources/icon.ico</argument>
                 <argument>--dest</argument>
@@ -60,7 +60,7 @@
                 <argument>--win-menu-group</argument>
                 <argument>EquationSolver</argument>
                 <argument>--app-version</argument>
-                <argument>4.3</argument>
+                <argument>4.4</argument>
                 <argument>--description</argument>
                 <argument>Löst mathematische Gleichungen für die Schule.</argument>
                 <argument>--vendor</argument>

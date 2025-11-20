@@ -21,7 +21,7 @@ public class StateMachine {
         this.binomialFormulaPatternWithK = Pattern.compile("P\\(X(<|>)=?k\\)(<|<)=?0(\\.|,)[0-9]+");
         this.binomialFormulaPatternWithG = Pattern.compile("P\\(X(<|>)=?g\\)(<|<)=?0(\\.|,)[0-9]+");
         this.vectorPointPattern = Pattern.compile("[A-Z][0-9]*\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
-        this.vectorPattern = Pattern.compile("[v-z][0-9]*\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
+        this.vectorPattern = Pattern.compile("[a-z][0-9]*=\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
     }
 
     //Methods matcher Methods

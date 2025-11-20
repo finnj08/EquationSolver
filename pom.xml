@@ -6,7 +6,7 @@
 
     <groupId>com.finn.juenger</groupId>
     <artifactId>EquationSolver</artifactId>
-    <version>4.3</version>
+    <version>4.4</version>
     <name>EquationSolver</name>
 
     <properties>
@@ -74,7 +74,7 @@
 
                                 <!-- Dein fertiges Jar -->
                                 <argument>--main-jar</argument>
-                                <argument>EquationSolver-4.3.jar</argument>
+                                <argument>EquationSolver-4.4.jar</argument>
 
                                 <!-- Icon -->
                                 <argument>--icon</argument>
@@ -97,7 +97,7 @@
 
                                 <!-- Metadaten -->
                                 <argument>--app-version</argument>
-                                <argument>4.3</argument>
+                                <argument>4.4</argument>
                                 <argument>--description</argument>
                                 <argument>Löst mathematische Gleichungen für die Schule.</argument>
                                 <argument>--vendor</argument>
