@@ -21,7 +21,7 @@ public class VectorUI extends JPanel implements ActionListener{
     private JLabel vectorLengthOutputLabel;
     public JButton equationsButton;
     private JScrollPane scrollPane;
-    private JButton submit;
+    private JButton vectorDistanceButton;
     private JButton clear1;
     private JButton clear2;
     private JComboBox planeType1;
@@ -146,8 +146,8 @@ public class VectorUI extends JPanel implements ActionListener{
         distancePointBField.putClientProperty("JComponent.roundRect", true);
         distancePointBField.addActionListener(this);
 
-        submit = new JButton("Submit");
-        submit.addActionListener(this);
+        vectorDistanceButton = new JButton("Submit");
+        vectorDistanceButton.addActionListener(this);
 
         clear1 = new JButton("Clear");
         clear1.addActionListener(this);
@@ -156,7 +156,7 @@ public class VectorUI extends JPanel implements ActionListener{
         vectorDistanceInputPanel.add(distancePointAField);
         vectorDistanceInputPanel.add(pointB);
         vectorDistanceInputPanel.add(distancePointBField);
-        vectorDistanceInputPanel.add(submit);
+        vectorDistanceInputPanel.add(vectorDistanceButton);
         vectorDistanceInputPanel.add(clear1);
 
         return vectorDistanceInputPanel;
@@ -401,17 +401,47 @@ public class VectorUI extends JPanel implements ActionListener{
         return planeConversionOutputPanel;
     }
 
+    //Method not finished
+    public void calculatePlaneConversion() {
+        String input = planeEquationField.getText();
+        input = input.replace(" ", "");
+        input = input.replace(",", ".");
+
+        if (planeType1.getSelectedItem() == planeTypes[0] | planeType2.getSelectedItem() == planeTypes[1]) {
+            planeConversionOutputLabel.setText("Please select one of the plane types at each of the dropdown lists");
+        } else if (planeType1.getSelectedItem() == planeTypes[1]) {
+            if(sm.parametricFormPlaneMatches(input)) {
+                if (planeType2.getSelectedItem() == planeTypes[2]) {
+                    planeConversionOutputLabel.setText(calc.convertParametricFormToNormalForm(input));
+                } else if (planeType2.getSelectedItem() == planeTypes[3]) {
+                    planeConversionOutputLabel.setText(calc.convertNormalFormToCartesianForm(calc.convertParametricFormToNormalForm(input)));
+                }
+            } else {
+                planeConversionOutputLabel.setText("Please type in your plane equation correctly (Info Icon)");
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == distancePointBField || e.getSource() == submit || e.getSource() == distancePointAField) {
+        if (e.getSource() == distancePointBField || e.getSource() == vectorDistanceButton || e.getSource() == distancePointAField) {
             calculateVectorDistance();
-        } else if (e.getSource() == clear1) {
+        }
+        if (e.getSource() == clear1) {
             distancePointAField.setText("");
             distancePointBField.setText("");
-        } else if (e.getSource() == vectorLengthField || e.getSource() == vectorLengthButton) {
+        }
+        if (e.getSource() == vectorLengthField || e.getSource() == vectorLengthButton) {
             calculateVectorLength();
-        } else if (e.getSource() == clear2) {
+        }
+        if (e.getSource() == clear2) {
             vectorLengthField.setText("");
+        }
+        if (e.getSource() == planeEquationField | e.getSource() == planeConversionButton) {
+            calculatePlaneConversion();
+        }
+        if (e.getSource() == clear3) {
+            planeEquationField.setText("");
         }
     }
 }

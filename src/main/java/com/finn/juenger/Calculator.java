@@ -252,4 +252,56 @@ public class Calculator {
 
         return formulaCollection.vectorLength(a1, a2, a3);
     }
+
+    public String convertParametricFormToNormalForm(String input) {
+        String[] split = input.split("[()]");
+        float[] positionVector = new float[3];
+        float[] directionVector1 = new float[3];
+        float[] directionVector2 = new float[3];
+
+        for (int i = 0; i < 3; i++) {
+            positionVector[i] = Float.parseFloat(split[0].split("/")[i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            directionVector1[i] = Float.parseFloat(split[1].split("/")[i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            directionVector2[i] = Float.parseFloat(split[2].split("/")[i]);
+        }
+
+        //ArrayList result = formulaCollection.convertParametricFormToNormalForm(positionVector, directionVector1, directionVector2);
+        float[] normalVector = (float[]) formulaCollection.convertParametricFormToNormalForm(positionVector, directionVector1, directionVector2).get(0);
+        return "E: [x - (" + positionVector[0] + "/" + positionVector[1] + "/" + positionVector[2] + ")] * (" + normalVector[0] + "/" + normalVector[1] + "/" + normalVector[2] + ") = 0";
+    }
+
+    public String convertNormalFormToCartesianForm(String input) {
+        String[] split = input.split("[()]");
+
+        float[] positionVector = new float[3];
+        float[] normalVector = new float[3];
+        for (int i = 0; i < 3; i++) {
+            positionVector[i] = Float.parseFloat(split[1].split("/")[i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            normalVector[i] = Float.parseFloat(split[3].split("/")[i]);
+        }
+        float[] result = formulaCollection.convertNormalFormToCartesianForm(positionVector, normalVector);
+        return "E: " + result[0] + "x1 + " + result[1] + "x2 + " + result[2] + "x3 = " + result[3];
+    }
+
+    public String convertCartesianFormToParametricForm(String input) {
+        float[] normalVector = new float[3];
+        String[] split = input.split("[+=]");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].substring(0,split[i].length() - 2);
+        }
+        for (int i = 0; i < split.length; i++) {
+            normalVector[i] = Float.parseFloat(split[i]);
+        }
+
+        float[] positionvector = (float[]) formulaCollection.convertCartesianFormToParametricForm(normalVector).get(0);
+        float[] directionvector1 = (float[]) formulaCollection.convertCartesianFormToParametricForm(normalVector).get(1);
+        float[] directionvector2 = (float[]) formulaCollection.convertCartesianFormToParametricForm(normalVector).get(2);
+        return "E : x = (" + positionvector[0] + "/" + positionvector[1] + "/" + positionvector[2] + ") + (" + directionvector1[0] + "/" + directionvector1[1] + "/" + directionvector1[2] + ") * t + (" + directionvector2[0] + "/" + directionvector2[1] + "/" + directionvector2[2] + ") * s";
+    }
 }
