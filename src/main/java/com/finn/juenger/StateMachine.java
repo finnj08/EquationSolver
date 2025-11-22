@@ -23,7 +23,7 @@ public class StateMachine {
 
     //Constructor
     public StateMachine() {
-        this.floatNumber = "(-|\\+)?[0-9]+((\\.|,)[0-9]+)?";
+        this.floatNumber = "([-+])?[0-9]+(([.,])[0-9]+)?";
         this.linearPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
         this.quadraticPattern = Pattern.compile("(\\+|-)?[0-9]+((\\.|,)[0-9]+)?x\\^2(\\+|-)[0-9]+((\\.|,)[0-9]+)?x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
         this.exponentialPattern = Pattern.compile("((\\+|-)?[0-9]+((\\.|,)[0-9]+)?\\*)?(([0-9]+((\\.|,)[0-9]+)?)|e)\\^x((\\+|-)[0-9]+((\\.|,)[0-9]+)?)?=(\\+|-)?[0-9]+((\\.|,)[0-9]+)?");
@@ -32,9 +32,9 @@ public class StateMachine {
         this.vector = "\\("+ floatNumber + "/"+ floatNumber + "/" + floatNumber + "\\)";
         this.vectorPointPattern = Pattern.compile("[A-Z][0-9]*\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
         this.vectorPattern = Pattern.compile("[a-z][0-9]*=\\([0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?/[0-9]+((\\.|,)[0-9]+)?\\)");
-        this.parametricFormPlane = "[A-Z][0-9]*:" + vector + "\\+" + vector + "\\*[a-z]" + vector + "\\*[a-z]";
+        this.parametricFormPlane = "[A-Z][0-9]*:" + vector + "\\+" + vector + "\\*[a-z]\\+" + vector + "\\*[a-z]";
         this.parametricFormPlanePattern = Pattern.compile(parametricFormPlane);
-        this.normalFormPlane = "[A-Z][0-9]*:\\[" + vector + "-[a-z]\\](\\*|°)" + vector + "=0";
+        this.normalFormPlane = "[A-Z][0-9]*:\\[[a-z]-" + vector + "\\]([*°])" + vector + "=0";
         this.normalFormPlanePattern = Pattern.compile(normalFormPlane);
         this.cartesianFormPlane = "[A-Z][0-9]*:" + floatNumber + "(x1)|x" + floatNumber + "(x2)|y" + floatNumber + "(x3)|z=" + floatNumber;
         this.cartesianFormPlanePattern = Pattern.compile(cartesianFormPlane);

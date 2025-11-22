@@ -31,6 +31,7 @@ public class VectorUI extends JPanel implements ActionListener{
     private JLabel planeConversionOutputLabel;
     private JButton planeConversionButton;
     private JButton clear3;
+    private JLabel infoIconPlanes;
 
 
     public VectorUI() {
@@ -83,9 +84,19 @@ public class VectorUI extends JPanel implements ActionListener{
         JPanel componentsPanel = new JPanel();
         componentsPanel.setLayout(new BoxLayout(componentsPanel, BoxLayout.Y_AXIS));
 
+        JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
+        sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        sep.setForeground(Color.lightGray);
+
+        JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
+        sep2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        sep2.setForeground(Color.lightGray);
+
         componentsPanel.add(initVectorDistancePanel());
+        componentsPanel.add(sep);
         componentsPanel.add(Box.createVerticalStrut(panelDistance));
         componentsPanel.add(initVectorLengthPanel());
+        componentsPanel.add(sep2);
         componentsPanel.add(Box.createVerticalStrut(panelDistance));
         componentsPanel.add(initPlaneConversionPanel());
 
@@ -336,17 +347,18 @@ public class VectorUI extends JPanel implements ActionListener{
 
         planeType1 = new JComboBox(planeTypes);
         planeType1.setMaximumSize(new Dimension(200, 50));
+        planeType1.addActionListener(this);
 
-        JLabel infoIcon = new JLabel();
-        infoIcon.setIcon(scaledIcon);
+        infoIconPlanes = new JLabel();
+        infoIconPlanes.setIcon(scaledIcon);
         if (planeType1.getSelectedItem().equals(planeTypes[1])) {
-            infoIcon.setToolTipText("E: x = (a1/a2/a3) + t * (b1/b2/b3) + s * (c1/c2/c3");
+            infoIconPlanes.setToolTipText("E: x = (a1/a2/a3) + t * (b1/b2/b3) + s * (c1/c2/c3)");
         } else if (planeType1.getSelectedItem().equals(planeTypes[2])) {
-            infoIcon.setToolTipText("E: x = [(a1/a2/a3) - (a1/a2/a3)] * n(n1/n2/n3) = 0");
+            infoIconPlanes.setToolTipText("E: x = [x - (a1/a2/a3)] * n(n1/n2/n3) = 0");
         } else if (planeType1.getSelectedItem().equals(planeTypes[3])) {
-            infoIcon.setToolTipText("E: ax1 + bx2 + bx3 = c");
+            infoIconPlanes.setToolTipText("E: ax1 + bx2 + bx3 = c");
         } else if (planeType1.getSelectedItem().equals(planeTypes[0])) {
-            infoIcon.setToolTipText("Please select a type of plane in the dropdown list.");
+            infoIconPlanes.setToolTipText("Please select a type of plane in the dropdown list.");
         }
 
         JLabel planeEquationLabel = new JLabel("Type in your plane equation:");
@@ -371,7 +383,7 @@ public class VectorUI extends JPanel implements ActionListener{
 
         selection1.add(planeType1Label);
         selection1.add(planeType1);
-        selection1.add(infoIcon);
+        selection1.add(infoIconPlanes);
         input.add(planeEquationLabel);
         input.add(planeEquationField);
         input.add(planeConversionButton);
@@ -398,6 +410,8 @@ public class VectorUI extends JPanel implements ActionListener{
         planeConversionOutputLabel = new JLabel();
         planeConversionOutputLabel.setFont(labelFont);
 
+        planeConversionOutputPanel.add(planeConversionOutputLabel);
+
         return planeConversionOutputPanel;
     }
 
@@ -407,14 +421,36 @@ public class VectorUI extends JPanel implements ActionListener{
         input = input.replace(" ", "");
         input = input.replace(",", ".");
 
-        if (planeType1.getSelectedItem() == planeTypes[0] | planeType2.getSelectedItem() == planeTypes[1]) {
+        if (planeType1.getSelectedItem() == planeTypes[0] || planeType2.getSelectedItem() == planeTypes[0]) {
             planeConversionOutputLabel.setText("Please select one of the plane types at each of the dropdown lists");
+        } else if (planeType1.getSelectedItem() == planeType2.getSelectedItem()) {
+            planeConversionOutputLabel.setText("Please select two different plane types");
         } else if (planeType1.getSelectedItem() == planeTypes[1]) {
             if(sm.parametricFormPlaneMatches(input)) {
                 if (planeType2.getSelectedItem() == planeTypes[2]) {
                     planeConversionOutputLabel.setText(calc.convertParametricFormToNormalForm(input));
                 } else if (planeType2.getSelectedItem() == planeTypes[3]) {
                     planeConversionOutputLabel.setText(calc.convertNormalFormToCartesianForm(calc.convertParametricFormToNormalForm(input)));
+                }
+            } else {
+                planeConversionOutputLabel.setText("Please type in your plane equation correctly (Info Icon)");
+            }
+        } else if (planeType1.getSelectedItem() == planeTypes[2]) {
+            if(sm.normalFormPlaneMatches(input)) {
+                if (planeType2.getSelectedItem() == planeTypes[1]) {
+                    planeConversionOutputLabel.setText(calc.convertCartesianFormToParametricForm(calc.convertNormalFormToCartesianForm(input)));
+                } else if (planeType2.getSelectedItem() == planeTypes[3]) {
+                    planeConversionOutputLabel.setText(calc.convertNormalFormToCartesianForm(input));
+                }
+            } else {
+                planeConversionOutputLabel.setText("Please type in your plane equation correctly (Info Icon)");
+            }
+        } else if (planeType1.getSelectedItem() == planeTypes[3]) {
+            if(sm.cartesianFormPlaneMatches(input)) {
+                if (planeType2.getSelectedItem() == planeTypes[1]) {
+                    planeConversionOutputLabel.setText(calc.convertCartesianFormToParametricForm(input));
+                } else if (planeType2.getSelectedItem() == planeTypes[2]) {
+                    planeConversionOutputLabel.setText(calc.convertParametricFormToNormalForm(calc.convertCartesianFormToParametricForm(input)));
                 }
             } else {
                 planeConversionOutputLabel.setText("Please type in your plane equation correctly (Info Icon)");
@@ -426,22 +462,27 @@ public class VectorUI extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == distancePointBField || e.getSource() == vectorDistanceButton || e.getSource() == distancePointAField) {
             calculateVectorDistance();
-        }
-        if (e.getSource() == clear1) {
+        } else if (e.getSource() == clear1) {
             distancePointAField.setText("");
             distancePointBField.setText("");
-        }
-        if (e.getSource() == vectorLengthField || e.getSource() == vectorLengthButton) {
+        } else if (e.getSource() == vectorLengthField || e.getSource() == vectorLengthButton) {
             calculateVectorLength();
-        }
-        if (e.getSource() == clear2) {
+        } else if (e.getSource() == clear2) {
             vectorLengthField.setText("");
-        }
-        if (e.getSource() == planeEquationField | e.getSource() == planeConversionButton) {
+        } else if (e.getSource() == planeEquationField || e.getSource() == planeConversionButton) {
             calculatePlaneConversion();
-        }
-        if (e.getSource() == clear3) {
+        } else if (e.getSource() == clear3) {
             planeEquationField.setText("");
+        } else if (e.getSource() == planeType1) {
+            if (planeType1.getSelectedItem().equals(planeTypes[0])) {
+                infoIconPlanes.setToolTipText("Please select a type of plane in the dropdown list.");
+            } else if (planeType1.getSelectedItem().equals(planeTypes[1])) {
+                infoIconPlanes.setToolTipText("E: x = (a1/a2/a3) + t * (b1/b2/b3) + s * (c1/c2/c3)");
+            } else if (planeType1.getSelectedItem().equals(planeTypes[2])) {
+                infoIconPlanes.setToolTipText("E: x = [x - (a1/a2/a3)] * n(n1/n2/n3) = 0");
+            } else if (planeType1.getSelectedItem().equals(planeTypes[3])) {
+                infoIconPlanes.setToolTipText("E: ax1 + bx2 + bx3 = c");
+            }
         }
     }
 }

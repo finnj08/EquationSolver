@@ -260,17 +260,17 @@ public class Calculator {
         float[] directionVector2 = new float[3];
 
         for (int i = 0; i < 3; i++) {
-            positionVector[i] = Float.parseFloat(split[0].split("/")[i]);
+            positionVector[i] = Float.parseFloat(split[1].split("/")[i]);
         }
         for (int i = 0; i < 3; i++) {
-            directionVector1[i] = Float.parseFloat(split[1].split("/")[i]);
+            directionVector1[i] = Float.parseFloat(split[3].split("/")[i]);
         }
         for (int i = 0; i < 3; i++) {
-            directionVector2[i] = Float.parseFloat(split[2].split("/")[i]);
+            directionVector2[i] = Float.parseFloat(split[5].split("/")[i]);
         }
 
         //ArrayList result = formulaCollection.convertParametricFormToNormalForm(positionVector, directionVector1, directionVector2);
-        float[] normalVector = (float[]) formulaCollection.convertParametricFormToNormalForm(positionVector, directionVector1, directionVector2).get(0);
+        float[] normalVector = (float[]) formulaCollection.convertParametricFormToNormalForm(positionVector, directionVector1, directionVector2).get(1);
         return "E: [x - (" + positionVector[0] + "/" + positionVector[1] + "/" + positionVector[2] + ")] * (" + normalVector[0] + "/" + normalVector[1] + "/" + normalVector[2] + ") = 0";
     }
 
